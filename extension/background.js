@@ -261,20 +261,15 @@ function downloadTranscript(index, isWebhookEnabled) {
                 const timestamp = new Date(meeting.meetingStartTimestamp)
                 const formattedTimestamp = timestamp.toLocaleString("default", timeFormat).replace(/[\/:]/g, "-")
 
-                const fileName = `TranscripTonic/Transcript-${sanitisedMeetingTitle} at ${formattedTimestamp}.txt`
+                const fileName = `TranscripTonic/${formattedTimestamp}-${sanitisedMeetingTitle}.md`
 
 
                 // Format transcript and chatMessages content
                 let content = getTranscriptString(meeting.transcript)
-                content += `\n\n---------------\nCHAT MESSAGES\n---------------\n\n`
+                content += `\n#CHAT MESSAGES\n`
                 content += getChatMessagesString(meeting.chatMessages)
 
-                // Add branding
-                content += "\n\n---------------\n"
-                content += "Transcript saved using TranscripTonic Chrome extension (https://chromewebstore.google.com/detail/ciepnfnceimjehngolkijpnbappkkiag)"
-                content += "\n---------------"
-
-                const blob = new Blob([content], { type: "text/plain" })
+                const blob = new Blob([content], { type: "text/markdown" })
 
                 // Read the blob as a data URL
                 const reader = new FileReader()
@@ -306,7 +301,7 @@ function downloadTranscript(index, isWebhookEnabled) {
                             chrome.downloads.download({
                                 // @ts-ignore
                                 url: dataUrl,
-                                filename: "TranscripTonic/Transcript.txt",
+                                filename: "TranscripTonic/Transcript.md",
                                 conflictAction: "uniquify"
                             })
                             console.log("Invalid file name. Transcript downloaded to TranscripTonic directory with simple file name.")
