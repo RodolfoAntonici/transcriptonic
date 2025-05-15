@@ -9,7 +9,7 @@ const timeFormat = {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    hour12: true
+    hour12: false
 }
 
 
@@ -265,14 +265,14 @@ function downloadTranscript(index, isWebhookEnabled) {
 
                 // Format timestamp for human-readable filename and sanitise to prevent invalid filenames
                 const timestamp = new Date(meeting.meetingStartTimestamp)
-                const formattedTimestamp = timestamp.toLocaleString("default", timeFormat).replace(/[\/:]/g, "-")
+                const formattedTimestamp = timestamp.toLocaleString("pt-BR", timeFormat).replace(/[\/:]/g, "-")
 
                 const fileName = `TranscripTonic/${formattedTimestamp}-${sanitisedMeetingTitle}.md`
 
 
                 // Format transcript and chatMessages content
                 let content = getTranscriptString(meeting.transcript)
-                content += `\n#CHAT MESSAGES\n`
+                content += `\n# CHAT MESSAGES\n`
                 content += getChatMessagesString(meeting.chatMessages)
 
                 const blob = new Blob([content], { type: "text/markdown" })
@@ -362,8 +362,8 @@ function postTranscriptToWebhook(index) {
                         else {
                             webhookData = {
                                 meetingTitle: meeting.meetingTitle || meeting.title || "",
-                                meetingStartTimestamp: new Date(meeting.meetingStartTimestamp).toLocaleString("default", timeFormat).toUpperCase(),
-                                meetingEndTimestamp: new Date(meeting.meetingEndTimestamp).toLocaleString("default", timeFormat).toUpperCase(),
+                                meetingStartTimestamp: new Date(meeting.meetingStartTimestamp).toLocaleString("pt-BR", timeFormat).toUpperCase(),
+                                meetingEndTimestamp: new Date(meeting.meetingEndTimestamp).toLocaleString("pt-BR", timeFormat).toUpperCase(),
                                 transcript: getTranscriptString(meeting.transcript),
                                 chatMessages: getChatMessagesString(meeting.chatMessages)
                             }
@@ -431,7 +431,7 @@ function getTranscriptString(transcript) {
     let transcriptString = ""
     if (transcript.length > 0) {
         transcript.forEach(transcriptBlock => {
-            transcriptString += `${transcriptBlock.personName} (${new Date(transcriptBlock.timestamp).toLocaleString("default", timeFormat).toUpperCase()})\n`
+            transcriptString += `${transcriptBlock.personName} (${new Date(transcriptBlock.timestamp).toLocaleString("pt-BR", timeFormat).toUpperCase()})\n`
             transcriptString += transcriptBlock.transcriptText
             transcriptString += "\n\n"
         })
@@ -449,7 +449,7 @@ function getChatMessagesString(chatMessages) {
     let chatMessagesString = ""
     if (chatMessages.length > 0) {
         chatMessages.forEach(chatMessage => {
-            chatMessagesString += `${chatMessage.personName} (${new Date(chatMessage.timestamp).toLocaleString("default", timeFormat).toUpperCase()})\n`
+            chatMessagesString += `${chatMessage.personName} (${new Date(chatMessage.timestamp).toLocaleString("pt-BR", timeFormat).toUpperCase()})\n`
             chatMessagesString += chatMessage.chatMessageText
             chatMessagesString += "\n\n"
         })
